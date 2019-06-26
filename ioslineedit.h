@@ -14,8 +14,8 @@ public:
         setMaximumSize(QSize(10,10));
         move(-10,-10);
         lower();
-        hide();
-        connect(this, &QLineEdit::editingFinished, this, &LineEdit::hide);
+//        hide();
+//        connect(this, &QLineEdit::editingFinished, this, &LineEdit::hide);
     }
 
 public slots:
@@ -34,6 +34,7 @@ public:
     explicit IosLineEdit(QObject *parent = nullptr) : QObject(parent)
     {
         QWidget *parentWidget = nullptr;
+
         for(auto widget : qApp->allWidgets()){
             if(widget->objectName() == "myQuickWidget")
                 parentWidget = widget;
@@ -45,6 +46,7 @@ public:
         connect(m_lineEdit, &LineEdit::editingFinished, this, &IosLineEdit::editingFinished);
 
         connect(this, &IosLineEdit::init, m_lineEdit, &LineEdit::init);
+        connect(this, &IosLineEdit::init, this, &IosLineEdit::shiftFocus,Qt::QueuedConnection);
     }
 
     ~IosLineEdit()
@@ -61,6 +63,7 @@ signals:
 
     void init(const QString &currentText);
 
+    void shiftFocus();
 protected:
     LineEdit *m_lineEdit = nullptr;
 };
